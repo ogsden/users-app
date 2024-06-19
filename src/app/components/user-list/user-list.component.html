@@ -1,0 +1,53 @@
+<div>
+  <h1>Пользователи</h1>
+  <div class="actions-container">
+    <input class="input" type="text" [formControl]="searchControl" placeholder="Поиск по имени пользователя" />
+    
+    <div>
+      <label>
+        Показывать по:
+        <select (change)="onItemsPerPageChange($event)">
+          @for (count of [5, 10, 20]; track count) {
+            <option [value]="count">{{ count }}</option>
+          }
+        </select>
+      </label>
+    </div>
+  
+    <div>
+      <button (click)="toggleViewMode()">
+        Переключить на {{ viewMode === 'card' ? 'список' : 'карточки' }}
+      </button>
+    </div>
+  </div>
+  
+  @if (loading) {
+    <div>Загрузка...</div>
+  } @else {
+    <div class="users-container">
+      @if (viewMode === 'card') {
+        <div class="card">
+          @for (user of users; track user.id) {
+            <app-user-card [user]="user" (remove)="removeUser(user.id)"></app-user-card>
+          }
+        </div>
+      } @else {
+        <div>
+          <table>
+            @for (user of users; track user.id) {
+              <tr>
+                <app-user-row [user]="user" (remove)="removeUser(user.id)"></app-user-row>
+              </tr>
+            }
+          </table>
+        </div>
+      }
+      
+      <div class="pagination">
+        @for (page of pages; track page) {
+          <button (click)="onPageChange(page)">{{ page }}</button>
+        }
+      </div>
+    </div>
+  }
+</div>
